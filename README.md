@@ -1,18 +1,18 @@
 # dsa405-project
 DSA 405 class semester project for data wrangeling and web scraping. 
-# AirBnB & Discord Data Project — DSA 405
+# Discord Reviews Data Project — DSA 405
 
 ## What this project is
 
-This repository contains work for the DSA 405 course project, which examines user
-behavior through two data sources. This milestone (P2) covers the audit, cleaning,
-and provenance documentation for one of those sources: a dataset of public App Store
-reviews for the Discord app.
+This repository contains the DSA 405 course project, which examines the top,
+most-helpful user reviews of the Discord app on the Apple App Store, drawn from
+nine different country storefronts. The goal is to analyze this review data's
+ratings, review text, timestamps, and app versions to understand patterns in
+user feedback across markets.
 
-The notebook performs a systematic data audit, documents a column-by-column data
-dictionary, executes and logs every cleaning decision made to the raw data, reconciles
-row and column counts between the raw and cleaned files, and summarizes the dataset's
-origin and limitations in a provenance brief.
+The project is built in stages: auditing and cleaning the raw data, documenting
+its provenance and structure, and then using the cleaned data to answer the
+project's analytical questions.
 
 ## Where the data came from
 
