@@ -1,49 +1,63 @@
-# dsa405-project
-DSA 405 class semester project for data wrangeling and web scraping. 
-# Discord Reviews Data Project — DSA 405
+# Discord Reviews Data Project: DSA 405 (P3)
 
 ## What this project is
 
-This repository contains the DSA 405 course project, which examines the top,
-most-helpful user reviews of the Discord app on the Apple App Store, drawn from
-nine different country storefronts. The goal is to analyze this review data's
-ratings, review text, timestamps, and app versions to understand patterns in
-user feedback across markets.
+This project joins Discord's Apple App Store reviews to the EF English Proficiency Index
+by country, then checks the join before analyzing it.
 
-The project is built in stages: auditing and cleaning the raw data, documenting
-its provenance and structure, and then using the cleaned data to answer the
-project's analytical questions.
+Average ratings range from 1.68 stars (Canada) to 4.45 (Germany). The proficiency-band
+averages mix countries that differ widely, so the analysis compares countries instead of
+bands.
 
 ## Where the data came from
 
-The review data was collected from Apple's public iTunes RSS "Customer Reviews" feed
-for the Discord app (App Store ID: 985746746), pulled across nine country storefronts
-(US, Brazil, Russia, India, UK, Germany, Canada, Australia, New Zealand), sorted by
-"most helpful." Full source URLs and the collection date are recorded in
-[`data/raw/SOURCES.md`](data/raw/SOURCES.md).
+| Source | What it is | Access | License / terms |
+|---|---|---|---|
+| Apple App Store customer reviews (Discord, App ID 985746746) | 499 most-helpful reviews for each of 9 storefronts | Public RSS JSON feed, 10 pages per storefront, 1-second pause between requests | Apple Media Services Terms, Section F. `robots.txt` contains `Disallow: /*/rss/*`, which matches this endpoint |
+| EF English Proficiency Index (Wikipedia) | Country proficiency scores and bands | Wikipedia page, fetched once and saved | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
 
-The raw file, `discord_reviews_raw.csv`, is stored unmodified in `data/raw/` and is
-never edited or overwritten by any code in this repository — all cleaning happens on
-a working copy inside the notebook, with the result saved separately to
-`data/cleaned/`.
+Download URLs and dates are in [`data/raw/SOURCES.md`](data/raw/SOURCES.md).
+
+The five native-English storefronts (US, UK, Canada, Australia, New Zealand) are not in the
+EF table. The notebook gives them a placeholder score of 700 and the band "Native." These
+are not measured scores.
 
 ## How to run it
 
-1. Open the notebook in Google Colab (use the "Open in Colab" button at the top of
-   this file, if viewing on GitHub).
-2. Run all cells from top to bottom. The notebook reads the raw data directly from
-   this repository's GitHub raw URL, so no manual download is required:
-```python
-   DATA = "https://raw.githubusercontent.com/austinwgross/dsa405/main/data/raw/"
-   df_raw = pd.read_csv(DATA + "discord_reviews_raw.csv")
-```
-3. The notebook will produce the audit output, data dictionary, cleaning log, row/column
-   accounting, and provenance brief in sequence, and will save the cleaned dataset to
-   `data/cleaned/apple_reviews_cleaned.csv`.
+1. Open `DSA405_002_FA26_P3_awgross.ipynb` in Google Colab.
+2. Go to **Runtime → Restart session**.
+3. Run each cell one at a time, in order from top to bottom. Do not use **Run all**.
+
+Cells 2b, 2d and 3b are assertion demonstrations. They corrupt a copy of the data on purpose
+and raise an `AssertionError` to show that the data checks fail loudly. Those two errors
+are expected. After each one, continue with the next cell.
+
+The notebook saves its working copies to `data/cache/` inside the Colab session and never
+writes to `data/raw/`. If a cached file already exists, the cell loads it instead of
+sending a new request. The notebook does not read from GitHub. The files in this
+repository's `data/raw/` folder are copies of one run's output, uploaded by hand and not
+edited since.
 
 ## Repository structure
 
 ```
+DSA405_002_FA26_P0_awgross.ipynb   # P0 notebook
+DSA405_002_FA26_P2_awgross.ipynb   # P2 notebook: audit, cleaning, provenance
+DSA405_002_FA26_P3_awgross.ipynb   # P3 notebook: acquisition, cleaning, join, verification, analysis
+data/
+  raw/
+    SOURCES.md                              # download URLs and dates
+    discord_reviews_multi_country_raw.json  # Apple feed, all storefronts
+    discord_reviews_raw.csv                 # Apple feed, flattened to CSV
+    wikipedia_ef_epi_raw.html               # Wikipedia page
+    wiki_ef_epi_uncleaned.csv               # EF table as parsed from the page
+README.md
+```
+
+## Notes
+
+- Each storefront has 499 reviews because the code requests 10 pages. Page 1 includes one
+  app-metadata entry, which is dropped, so 49 + 9 × 50 = 499.
 data/
   raw/
     discord_reviews_raw.csv   # original, unmodified scrape
